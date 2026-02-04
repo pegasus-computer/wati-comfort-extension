@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 320px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 16px;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #25d366;
+            padding-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .current-sender {
+            background: white;
+            border: 2px solid #25d366;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .current-sender-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .current-sender-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #25d366;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sender-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .sender-select:focus {
+            outline: none;
+            border-color: #25d366;
+            box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.1);
+        }
+
+        .team-members {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .team-member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .team-member-item:last-child {
+            border-bottom: none;
+        }
+
+        .member-name {
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .member-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+
+        .member-badge.active {
+            background: #25d366;
+        }
+
+        .add-member-form {
+            display: flex;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .add-member-input {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .add-member-input:focus {
+            outline: none;
+            border-color: #25d366;
+        }
+
+        .add-member-btn {
+            padding: 8px 12px;
+            background: #25d366;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-member-btn:hover {
+            background: #20ba5a;
+        }
+
+        .remove-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #ff5252;
+        }
+
+        .edit-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .edit-btn:hover {
+            background: #357abd;
+        }
+
+        .member-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .edit-form {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .edit-input {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: #25d366;
+        }
+
+        .edit-form button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .save-edit-btn {
+            background: #25d366;
+            color: white;
+        }
+
+        .save-edit-btn:hover {
+            background: #20ba5a;
+        }
+
+        .cancel-edit-btn {
+            background: #ddd;
+            color: #333;
+        }
+
+        .cancel-edit-btn:hover {
+            background: #ccc;
+        }
+
+        .status-info {
+            background: #e8f5e9;
+            border-left: 3px solid #25d366;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #2e7d32;
+            margin-top: 12px;
+        }
+
+        .status-info.warning {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            color: #e65100;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #25d366;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #20ba5a;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 20px 10px;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👥 WATI Comfort - Sender Tag</h1>
+    </div>
+
+    <!-- Login Section (shown when not logged in) -->
+    <div id="loginSection" class="section" style="display: none;">
+        <div class="current-sender">
+            <div class="current-sender-label">Sign in to continue</div>
+            
+            <input type="text" id="loginEmail" class="add-member-input" placeholder="Email or Name" style="margin-bottom: 8px; margin-top: 8px;">
+            <input type="password" id="loginPassword" class="add-member-input" placeholder="Password" style="margin-bottom: 8px;">
+            
+            <button id="loginBtn" class="btn btn-primary" style="width: 100%; margin-bottom: 8px;">
+                Sign In
+            </button>
+            
+            <div style="text-align: center; font-size: 12px; color: #666; margin-bottom: 8px;">
+                Don't have an account?
+            </div>
+            
+            <button id="signupBtn" class="btn btn-secondary" style="width: 100%;">
+                Create Account
+            </button>
+            
+            <div class="status-info" id="loginStatus" style="display: none; margin-top: 12px;"></div>
+        </div>
+    </div>
+
+    <!-- User Info Section (shown when logged in) -->
+    <div id="userSection" style="display: none;">
+        <!-- Current Customer Section -->
+        <div class="section">
+            <div class="section-title">Current Customer</div>
+            <div class="current-sender">
+                <div id="customerInfo" style="text-align: center; padding: 12px;">
+                    <div style="font-size: 13px; color: #999;">Open a chat in WATI to see customer info</div>
+                </div>
+                <div id="customerDetails" style="display: none;">
+                    <div style="font-size: 11px; color: #999; margin-bottom: 2px;">Phone Number:</div>
+                    <div id="customerPhone" style="font-size: 16px; font-weight: 600; color: #25d366; margin-bottom: 8px;"></div>
+                    <div style="font-size: 11px; color: #999; margin-bottom: 2px;">Name:</div>
+                    <div id="customerName" style="font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px;"></div>
+                    <div style="font-size: 11px; color: #999; margin-bottom: 2px;">Default Sales:</div>
+                    <div id="customerDefaultSales" style="font-size: 13px; font-weight: 500; color: #f57c00; cursor: pointer; margin-bottom: 8px;" title="Click to change (if authorized)"></div>
+                    <div style="font-size: 11px; color: #999; margin-bottom: 2px;">Status: <span style="font-size: 10px; color: #999;">(Change on WATI page)</span></div>
+                    <div id="customerStatus" style="font-size: 13px; font-weight: 500; color: #9c27b0;"></div>
+                </div>
+                <button id="refreshCustomerBtn" class="btn btn-secondary" style="width: 100%; margin-top: 12px; font-size: 11px;">
+                    🔄 Refresh Customer Info
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="current-sender" style="border-color: #4285f4;">
+                <div class="current-sender-label">Logged in as:</div>
+                <div class="current-sender-name" id="userName" style="color: #4285f4; font-size: 18px;"></div>
+                <div style="font-size: 13px; color: #666; margin-top: 4px;" id="userEmail"></div>
+                <div style="font-size: 11px; color: #999; margin-top: 2px;">ID: <span id="userId"></span></div>
+                
+                <button id="editNameBtn" class="btn btn-secondary" style="width: 100%; margin-top: 12px; font-size: 11px;">
+                    Edit Profile
+                </button>
+                
+                <!-- Edit profile form (hidden by default) -->
+                <div id="editNameForm" style="display: none; margin-top: 12px;">
+                    <div style="font-size: 11px; color: #666; margin-bottom: 4px; font-weight: 600;">Display Name:</div>
+                    <input type="text" id="newNameInput" class="add-member-input" placeholder="Enter new name" style="margin-bottom: 12px;">
+                    
+                    <div style="font-size: 11px; color: #666; margin-bottom: 4px; font-weight: 600;">Change Password (optional):</div>
+                    <input type="password" id="oldPasswordInput" class="add-member-input" placeholder="Old password" style="margin-bottom: 6px;">
+                    <input type="password" id="newPasswordInput" class="add-member-input" placeholder="New password" style="margin-bottom: 6px;">
+                    <input type="password" id="confirmPasswordInput" class="add-member-input" placeholder="Confirm new password" style="margin-bottom: 12px;">
+                    
+                    <div style="display: flex; gap: 6px;">
+                        <button id="saveNameBtn" class="btn btn-primary" style="flex: 1; font-size: 11px;">Save</button>
+                        <button id="cancelEditNameBtn" class="btn btn-secondary" style="flex: 1; font-size: 11px;">Cancel</button>
+                    </div>
+                </div>
+                
+                <button id="logoutBtn" class="btn btn-secondary" style="width: 100%; margin-top: 12px; font-size: 11px;">
+                    Logout
+                </button>
+                
+                <button id="controlPanelBtn" class="btn btn-primary" style="width: 100%; margin-top: 8px; font-size: 11px; display: none; background: #f57c00; border-color: #f57c00;">
+                    🔧 Control Panel
+                </button>
+            </div>
+        </div>
+
+        <div class="status-info" id="statusInfo" style="display: none;"></div>
+    </div>
+
+    <!-- Control Panel Section (Admin Only) -->
+    <div id="controlPanelSection" style="display: none;">
+        <div class="section" style="padding: 15px;">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <button id="backFromControlPanel" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px; margin-right: 10px;">
+                    ← Back
+                </button>
+                <h3 style="margin: 0; color: #f57c00; font-size: 18px;">🔧 Control Panel</h3>
+            </div>
+
+            <!-- User Management -->
+            <div style="background: #f5f5f5; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">👥 User Role Management</h4>
+                <div id="userListAdmin" style="max-height: 120px; overflow-y: auto;">
+                    Loading users...
+                </div>
+            </div>
+
+            <!-- System Statistics -->
+            <div style="background: #f5f5f5; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #333;">📊 Statistics</h4>
+                <div id="systemStats">
+                    <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Total Users: <span id="statTotalUsers">-</span></div>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Online Users: <span id="statOnlineUsers">-</span></div>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Total Customers: <span id="statTotalCustomers">-</span></div>
+                    <div style="font-size: 12px; color: #666;">Messages Today: <span id="statMessagesToday">-</span></div>
+                </div>
+                <button id="refreshStatsBtn" class="btn btn-secondary" style="width: 100%; margin-top: 10px; font-size: 12px;">
+                    🔄 Refresh Stats
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
